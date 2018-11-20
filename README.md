@@ -13,7 +13,7 @@ There are 5 places you can use as a serial port:
 - kUSB1 
 - kUSB2
 
-**kOnboard is a RS-232 port. You need to get an RS-232 to ttl serial converter. USB isn't tested.*
+**kOnboard is a RS-232 port. You need to get an RS-232 to ttl serial converter. USB has not been tested.*
 
 These drivers are also not meant for individually adressable led strips. **The entire strip will be the same color.**
 
