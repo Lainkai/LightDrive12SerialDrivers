@@ -1,12 +1,17 @@
 package net.bak3dnet.robotics.led.modules;
 
-import java.util.List;
-
-import net.bak3dnet.robotics.led.Color;
+import net.bak3dnet.robotics.led.modules.util.GradientMap;
 
 class AGradientModule extends LedControlModule {
 
-    public AGradientModule(List<Color> colors) {
+    GradientMap colors;
+
+    double scale;
+
+    long position;
+
+    boolean gradientToOriginal;
+    public AGradientModule(GradientMap colorAndPercentage, double scale, boolean gradientToOriginal, double startAtPercent) {
 
         if(colors.size() < 2) {
 
@@ -14,13 +19,18 @@ class AGradientModule extends LedControlModule {
 
         }
 
+        this.scale = scale;
+
     }
 
     @Override
-    public void task(long deltaTime) {
-
+    public byte[] updateColorData(long deltaTime) {
+        position += deltaTime * (long)scale;
+        
+        return colors.getCurrentColor(position);
     }
 
-    
+    @Override
+    public void task(long deltaTime) {}
 
 }

@@ -2,6 +2,12 @@ package net.bak3dnet.robotics.led;
 
 public class Color {
 
+    private byte red;
+    private byte green;
+    private byte blue;
+
+    public static final Color SoftBlue = new Color("#0086f4");
+
     public static byte[] stringToByteArray(String toRGB) {
 
         byte[] colorArray = new byte[3];
@@ -28,6 +34,37 @@ public class Color {
 
         return colorArray;
         
+    }
+
+    public Color(byte[] byteArray) {
+
+        red = byteArray[0];
+        green = byteArray[1];
+        blue = byteArray[2];
+
+    }
+    
+    public Color(String hexString) {
+
+        this(stringToByteArray(hexString));
+
+    }
+
+    public byte[] getBytes() {
+
+        byte[] out = {red,green,blue};
+        return out;
+
+    }
+
+    public byte getRed(){
+        return red;
+    }
+    public byte getGreen(){
+        return green;
+    }
+    public byte getBlue(){
+        return blue;
     }
 
 }

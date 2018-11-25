@@ -4,17 +4,23 @@ import net.bak3dnet.robotics.led.Color;
 
 public class AStaticColorModule extends LedControlModule{
 
-    public AStaticColorModule(byte[] colorArray) {
+    public AStaticColorModule(byte[] rgbArray) {
 
-        red = colorArray[0];
-        green = colorArray[1];
-        blue = colorArray[2];
+        red = rgbArray[0];
+        green = rgbArray[1];
+        blue = rgbArray[2];
 
     } 
 
     public AStaticColorModule(String hexString) {
 
         this(Color.stringToByteArray(hexString));
+
+    }
+
+    public AStaticColorModule(Color color) {
+    
+        this(color.getBytes());
 
     }
 

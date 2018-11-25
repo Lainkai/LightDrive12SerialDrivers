@@ -10,7 +10,14 @@ plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
     id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
+
+    id "com.jfrog.bintray" version "1.8.4"
+    id 'maven'
+    id 'maven-publish'
 }
+
+version = '1.0.0'
+group = 'robotics'
 
 dependencies {
     api wpilib()
@@ -23,4 +30,44 @@ repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+
+}
+
+artifacts {
+    //archives javadocJar
+}
+
+bintray {
+
+    user = 'bak3dchips'
+
+    key = System.getenv('BINTRAY_KEY')
+
+    configurations = ['archives']
+
+    pkg {
+
+        repo = 'robotics'
+        name = 'led-controller'
+        userOrg = 'bak3dnet'
+        licenses = ['GPL-3.0']
+        vcsUrl = 'https://github.com/Lainkai/LightDrive12SerialDrivers.git'
+        publicDownloadNumbers = true
+
+        version {
+
+            name = '1.0.0-Final'
+            desc = 'First official release for the Light Drive 12 drivers'
+            vcsTag = '1.0.0'
+
+        }
+
+    }
+
 }
