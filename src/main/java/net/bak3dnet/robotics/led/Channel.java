@@ -3,7 +3,7 @@ package net.bak3dnet.robotics.led;
 import net.bak3dnet.robotics.led.modules.LedControlModule;
 import net.bak3dnet.robotics.led.modules.AStaticColorModule;
 
-class Channel {
+public class Channel {
 
     private byte redValue;
     private byte greenValue;
