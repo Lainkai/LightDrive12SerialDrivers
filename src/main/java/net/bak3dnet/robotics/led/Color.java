@@ -27,15 +27,15 @@ public class Color {
 
         if(toRGB.length() == 6) {
 
-            colorArray[0] = (byte) (Integer.parseInt(toRGB.substring(0, 1), 16));
-            colorArray[1] = (byte) (Integer.parseInt(toRGB.substring(2, 3), 16));
-            colorArray[2] = (byte) (Integer.parseInt(toRGB.substring(4, 5), 16));
+            colorArray[0] = (byte) (Integer.parseInt(toRGB.substring(0, 1).trim(), 16));
+            colorArray[1] = (byte) (Integer.parseInt(toRGB.substring(2, 3).trim(), 16));
+            colorArray[2] = (byte) (Integer.parseInt(toRGB.substring(4, 5).trim(), 16));
 
         } else {
 
-            colorArray[0] = (byte) ((Integer.parseInt(toRGB.substring(0,0), 16))*17);
-            colorArray[1] = (byte) ((Integer.parseInt(toRGB.substring(1,1), 16))*17);
-            colorArray[2] = (byte) ((Integer.parseInt(toRGB.substring(2,2), 16))*17);
+            colorArray[0] = (byte) ((Integer.parseInt(toRGB.substring(0,0).trim(), 16))*17);
+            colorArray[1] = (byte) ((Integer.parseInt(toRGB.substring(1,1).trim(), 16))*17);
+            colorArray[2] = (byte) ((Integer.parseInt(toRGB.substring(2,2).trim(), 16))*17);
 
         }      
 
