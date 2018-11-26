@@ -104,6 +104,12 @@ public class GradientMap {
 
     }
 
+    public void remove(int colorPosition) {
+
+        remove(colorPosition);
+
+    }
+
     public int size() {
 
         return colors.size();
