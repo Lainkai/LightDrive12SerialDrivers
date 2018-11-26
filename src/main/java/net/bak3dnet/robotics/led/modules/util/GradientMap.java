@@ -106,7 +106,10 @@ public class GradientMap {
 
     public void remove(int colorPosition) {
 
-        remove(colorPosition);
+        durationOfMapMillis -= points.get(colorPosition);
+        put(colors.get(colorPosition+1), points.get(colorPosition+1), colorPosition);
+        colors.remove(colors.size()-1);
+        points.remove(points.size()-1);
 
     }
 
@@ -118,15 +121,7 @@ public class GradientMap {
 
     public long duration() {
 
-        long l =0;
-
-        for(int i =0; i < size(); i++) {
-
-            l += points.get(i);
-
-        }
-
-        return l;
+        return durationOfMapMillis;
 
     }
 
