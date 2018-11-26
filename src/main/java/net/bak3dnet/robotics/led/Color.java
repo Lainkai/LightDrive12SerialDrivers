@@ -22,20 +22,20 @@ public class Color {
         if(toRGB.charAt(0) == '#') {
 
             toRGB = toRGB.substring(1);
-
+            
         }
 
         if(toRGB.length() == 6) {
 
-            colorArray[0] = (Integer.decode(toRGB.substring(0, 1)).byteValue(), 16);
-            colorArray[1] = (Integer.decode(toRGB.substring(2, 3)).byteValue(), 16);
-            colorArray[2] = (Integer.decode(toRGB.substring(4, 5)).byteValue(), 16);
+            colorArray[0] = (Integer.decode(toRGB.substring(0, 1), 16).byteValue());
+            colorArray[1] = (Integer.decode(toRGB.substring(2, 3), 16).byteValue());
+            colorArray[2] = (Integer.decode(toRGB.substring(4, 5), 16).byteValue());
 
         } else {
 
-            colorArray[0] = (byte) ((Integer.decode(toRGB.substring(0,0)))*17,16);
-            colorArray[1] = (byte) ((Integer.decode(toRGB.substring(1,1)))*17,16);
-            colorArray[2] = (byte) ((Integer.decode(toRGB.substring(2,2)))*17,16);
+            colorArray[0] = (byte) ((Integer.decode(toRGB.substring(0,0), 16))*17);
+            colorArray[1] = (byte) ((Integer.decode(toRGB.substring(1,1), 16))*17);
+            colorArray[2] = (byte) ((Integer.decode(toRGB.substring(2,2), 16))*17);
 
         }      
 
