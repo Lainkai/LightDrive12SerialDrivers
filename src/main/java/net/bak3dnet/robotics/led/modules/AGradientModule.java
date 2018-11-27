@@ -35,7 +35,7 @@ public class AGradientModule extends LedControlModule {
     public byte[] updateColorData(long deltaTime) {
         position += deltaTime * (long)scale;
         
-        return colors.getCurrentColor(position);
+        return colors.getCurrentColor(position).getBytes();
     }
 
     @Override

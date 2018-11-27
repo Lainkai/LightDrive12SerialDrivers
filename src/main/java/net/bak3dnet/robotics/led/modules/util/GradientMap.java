@@ -27,11 +27,11 @@ public class GradientMap {
 
     }
 
-    public void put(Color color, Long lengthAfterLastColor, Integer position) {
+    public void put(Color color, Long lengthAfterLastColor, Integer index) {
 
-        if(colors.containsKey(position)) {
+        if(colors.containsKey(index)) {
 
-            for(Integer i = colors.size(); i > position;i--) {
+            for(Integer i = colors.size(); i > index;i--) {
 
                 colors.put(i+1,colors.get(i));
                 points.put(i+1, points.get(i));
@@ -40,25 +40,25 @@ public class GradientMap {
 
         }
 
-        colors.put(position, color);
-        points.put(position, lengthAfterLastColor);
+        colors.put(index, color);
+        points.put(index, lengthAfterLastColor);
 
         durationOfMapMillis += lengthAfterLastColor;
 
     }
 
-    public void replace(Color color, Long lengthAfterLastColor, Integer position) {
+    public void replace(Color color, Long lengthAfterLastColor, Integer index) {
 
-        colors.put(position, color);
-        points.put(position, lengthAfterLastColor);
+        colors.put(index, color);
+        points.put(index, lengthAfterLastColor);
 
     }
 
-    public byte[] getCurrentColor(Long positionInMilliseconds) {
+    public Color getCurrentColor(Long positionInMilliseconds) {
 
         if(colors.size() < 2) {
 
-            return colors.get(0).getBytes();
+            return colors.get(0);
 
         }
 
@@ -100,14 +100,19 @@ public class GradientMap {
 
         };
 
-        return out;
+        return new Color(out);
 
     }
 
-    public void remove(int colorPosition) {
+    public void remove(int index) {
 
-        durationOfMapMillis -= points.get(colorPosition);
-        put(colors.get(colorPosition+1), points.get(colorPosition+1), colorPosition);
+        if(index == 0) {
+            durationOfMapMillis -= points.get(index+1);
+            System.err.println(durationOfMapMillis); 
+        } else {
+            durationOfMapMillis -= points.get(index);
+        }
+        put(colors.get(index+1), points.get(index+1), index);
         colors.remove(colors.size()-1);
         points.remove(points.size()-1);
 
@@ -122,6 +127,12 @@ public class GradientMap {
     public long duration() {
 
         return durationOfMapMillis;
+
+    }
+
+    public Color getColor(int index) {
+
+        return colors.get(index);
 
     }
 
