@@ -74,4 +74,10 @@ public class Color {
         return blue;
     }
 
+    @Override
+    public String toString() {
+
+        return Integer.toString(red)+" "+Integer.toString(green)+" "+Integer.toString(blue);
+
+    }
 }
