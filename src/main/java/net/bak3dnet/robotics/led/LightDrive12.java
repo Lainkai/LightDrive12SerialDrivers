@@ -73,7 +73,7 @@ public class LightDrive12 {
 
         LightDrive12 lightDrive;
         Channel[] channels;
-        long previousTimes[];
+        long[] previousTimes = new long[4];
 
         public ControllerUpdatingService(LightDrive12 lDrive12) {
 
