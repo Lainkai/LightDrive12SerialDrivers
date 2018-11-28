@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import net.bak3dnet.robotics.led.modules.AStaticColorModule;
 import net.bak3dnet.robotics.led.modules.util.GradientMap;
 
 public class ColorTest {
@@ -98,6 +99,15 @@ public class ColorTest {
         //System.out.println(map.getColor(0).getBytes());
         //System.out.println(new Color("#00f").getBytes());
         assertArrayEquals(map.getColor(0).getBytes(), new Color("00F").getBytes());
+
+    }
+
+    @Test
+    public void testStaticColorTest() {
+
+        AStaticColorModule color = new AStaticColorModule("F12");
+
+        assertArrayEquals(new Color("F12").getBytes(), color.updateColorData(0));
 
     }
 
