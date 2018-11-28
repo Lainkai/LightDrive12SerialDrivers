@@ -13,13 +13,15 @@ public class AGradientModule extends LedControlModule {
     boolean gradientToOriginal;
     public AGradientModule(GradientMap colorAndPercentage, double scale, double startAtPercent) {
 
-        if(colors.size() < 2) {
+        if(colorAndPercentage.size() < 2) {
 
             throw new IllegalArgumentException("You need at least two colors to gradient.");
 
         }
 
         this.scale = scale;
+
+        colors = colorAndPercentage;
 
         position = colorAndPercentage.duration() *(long) startAtPercent;
 
@@ -34,7 +36,7 @@ public class AGradientModule extends LedControlModule {
     @Override
     public byte[] updateColorData(long deltaTime) {
         position += deltaTime * (long)scale;
-        
+        //System.out.println(position);
         return colors.getCurrentColor(position).getBytes();
     }
 

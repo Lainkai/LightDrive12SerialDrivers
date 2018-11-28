@@ -99,26 +99,25 @@ public class GradientMap {
         Color nextColor = colors.get(i);
         Color previousColor = colors.get(i-1);
 
-        Long percentOfNextColor = (preSub/points.get(i))*100;
-
-        //System.out.println(percentOfNextColor);
-
-        Long percentOfPreviousColor = (100-percentOfNextColor);
-
-        //System.out.println(percentOfPreviousColor);
+        float rateOfChangeRed = (previousColor.getRed()-nextColor.getRed())/points.get(i);
+        float rateOfChangeGreen = (previousColor.getGreen()-nextColor.getGreen())/points.get(i);
+        float rateOfChangeBlue = (previousColor.getBlue()-nextColor.getBlue())/points.get(i);
 
         byte[] out = {
 
-            (byte) (Math.round((percentOfNextColor*nextColor.getRed()+percentOfPreviousColor*previousColor.getRed())/100)),
+            //(byte) (Math.round((percentOfNextColor*nextColor.getRed()+percentOfPreviousColor*previousColor.getRed())/100)),
 
-            (byte) (Math.round((percentOfNextColor*nextColor.getGreen()+percentOfPreviousColor*previousColor.getGreen())/100)),
+            //(byte) (Math.round((percentOfNextColor*nextColor.getGreen()+percentOfPreviousColor*previousColor.getGreen())/100)),
 
-            (byte) (Math.round((percentOfNextColor*nextColor.getBlue()+percentOfPreviousColor*previousColor.getBlue())/100))
+            //(byte) (Math.round((percentOfNextColor*nextColor.getBlue()+percentOfPreviousColor*previousColor.getBlue())/100))
 
+            (byte) Math.round(previousColor.getRed()-rateOfChangeRed*preSub),
+            (byte) Math.round(previousColor.getGreen()-rateOfChangeGreen*preSub),
+            (byte) Math.round(previousColor.getBlue()-rateOfChangeBlue*preSub)
 
         };
 
-        //System.out.println((percentOfNextColor*nextColor.getGreen()));
+        //System.out.println(new Color(out).toString());
 
         return new Color(out);
 

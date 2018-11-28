@@ -55,11 +55,11 @@ public class LightDrive12 {
 
         byte[] dataOut = new byte[14];
         dataOut[0] = (byte) 0xAA;
-        for(int i = 0; i < 4; i++) {
+        for(int i = 1; i < 5; i++) {
 
-            dataOut[3*i-2] = channels[i].getColorValue('g');
-            dataOut[3*i-1] = channels[i].getColorValue('r');
-            dataOut[3*i] = channels[i].getColorValue('b');
+            dataOut[3*i-2] = channels[i-1].getColorValue('g');
+            dataOut[3*i-1] = channels[i-1].getColorValue('r');
+            dataOut[3*i] = channels[i-1].getColorValue('b');
 
         }
         
@@ -134,7 +134,8 @@ public class LightDrive12 {
 
         }
 
-        serviceThread.start();        
+        serviceThread = new Thread(updatingService, "LED Updating Service");
+        serviceThread.start();   
 
     }
 
