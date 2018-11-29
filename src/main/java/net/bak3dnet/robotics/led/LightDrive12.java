@@ -10,10 +10,10 @@ public class LightDrive12 {
     private ControllerUpdatingService updatingService;
     private Thread serviceThread;
 
-    private Channel channel1;
-    private Channel channel2;
-    private Channel channel3;
-    private Channel channel4;
+    private Channel channel1 = new Channel();
+    private Channel channel2 = new Channel();
+    private Channel channel3 = new Channel();
+    private Channel channel4 = new Channel();
 
     private Channel[] channels;
 
@@ -22,8 +22,6 @@ public class LightDrive12 {
     public LightDrive12(SerialPort.Port portToUse) {
 
         port = new SerialPort(115200, portToUse);
-
-        channel1 = channel2 = channel3 = channel4 = new Channel();
 
         channels = new Channel[4];
         channels[0] = channel1;
