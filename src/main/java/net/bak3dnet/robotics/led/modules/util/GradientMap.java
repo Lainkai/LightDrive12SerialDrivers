@@ -63,63 +63,52 @@ public class GradientMap {
 
     }
 
-    public Color getCurrentColor(Long positionInMilliseconds) {
+    private int getColorDelta(int nextColor, int previousColor, long lengthBtwnColors, long transitive) {
 
-        if(colors.size() < 2) {
+      double numerator = nextColor - previousColor;
 
-            return colors.get(0);
+      double delta = numerator / lengthBtwnColors;
 
-        }
+      float position = (float) ((double)delta*transitive);
+      
+      int finalOut = (int) Math.round(position);
 
-        if(positionInMilliseconds > durationOfMapMillis) {
+      return finalOut + previousColor;
 
-            while(positionInMilliseconds >= durationOfMapMillis) {
+    }
 
-                positionInMilliseconds -= durationOfMapMillis;
+    public Color getCurrentColor(double positionInMilliseconds) {
 
-            }
-            positionInMilliseconds = durationOfMapMillis - Math.abs(positionInMilliseconds);
+      int pointInGradient =(int) (positionInMilliseconds % duration());
 
-        } else if(positionInMilliseconds < 0) { throw new IllegalArgumentException(); }
+      int pIGBackup = pointInGradient;
 
-        Integer i = 0;
-        Long preSub = 0L;
-        while(true) {
+      int preSub = 0;
+      int futureColorId = 0;
 
-            preSub = positionInMilliseconds;
-            positionInMilliseconds -= points.get(i);
-            if((positionInMilliseconds <= 0L)){
-                //System.out.println(i);
-                break;
-            }
-            i++;
+      while(pIGBackup > 0) {
 
-        }
+        preSub = pIGBackup;
+        pIGBackup -= points.get(futureColorId);
+        futureColorId++;
 
-        Color nextColor = colors.get(i);
-        Color previousColor = colors.get(i-1);
+      }
 
-        float rateOfChangeRed = (previousColor.getRed()-nextColor.getRed())/points.get(i);
-        float rateOfChangeGreen = (previousColor.getGreen()-nextColor.getGreen())/points.get(i);
-        float rateOfChangeBlue = (previousColor.getBlue()-nextColor.getBlue())/points.get(i);
+      int prevColorId;
+      if(futureColorId == 0) {
 
-        byte[] out = {
+        prevColorId = colors.size()-1;
 
-            //(byte) (Math.round((percentOfNextColor*nextColor.getRed()+percentOfPreviousColor*previousColor.getRed())/100)),
+      } else {
+          prevColorId = futureColorId-1;
+      }
 
-            //(byte) (Math.round((percentOfNextColor*nextColor.getGreen()+percentOfPreviousColor*previousColor.getGreen())/100)),
 
-            //(byte) (Math.round((percentOfNextColor*nextColor.getBlue()+percentOfPreviousColor*previousColor.getBlue())/100))
-
-            (byte) Math.round(previousColor.getRed()-rateOfChangeRed*preSub),
-            (byte) Math.round(previousColor.getGreen()-rateOfChangeGreen*preSub),
-            (byte) Math.round(previousColor.getBlue()-rateOfChangeBlue*preSub)
-
-        };
-
-        //System.out.println(new Color(out).toString());
-
-        return new Color(out);
+      int currentRed = getColorDelta(colors.get(futureColorId).getRed(), colors.get(prevColorId).getRed(), points.get(futureColorId), (long)preSub);
+      int currentGreen = getColorDelta(colors.get(futureColorId).getGreen(), colors.get(prevColorId).getGreen(), points.get(futureColorId), (long)preSub);
+      int currentBlue = getColorDelta(colors.get(futureColorId).getBlue(), colors.get(prevColorId).getBlue(), points.get(futureColorId), (long)preSub);
+      
+      return new Color(currentRed,currentGreen,currentBlue);
 
     }
 

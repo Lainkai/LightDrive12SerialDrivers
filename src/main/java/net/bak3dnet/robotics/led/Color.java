@@ -50,6 +50,20 @@ public class Color {
         blue = byteArray[2];
 
     }
+
+    public Color(int red, int green, int blue) {
+
+        if(red > 255 || green > 255 || blue > 255 || red < 0|| green < 0 || blue < 0) {
+
+            throw new IllegalArgumentException("You need to make sure the values are between 0 and 255");
+
+        }
+
+        this.red = (byte) red;
+        this.green = (byte) green;
+        this.blue = (byte) blue;
+
+    }
     
     public Color(String hexString) {
 
@@ -64,20 +78,20 @@ public class Color {
 
     }
 
-    public byte getRed(){
-        return red;
+    public int getRed(){
+        return red & 0xff;
     }
-    public byte getGreen(){
-        return green;
+    public int getGreen(){
+        return green & 0xff;
     }
-    public byte getBlue(){
-        return blue;
+    public int getBlue(){
+        return blue & 0xff;
     }
 
     @Override
     public String toString() {
 
-        return Integer.toString(red)+" "+Integer.toString(green)+" "+Integer.toString(blue);
+        return Integer.toString(red & 0xff)+" "+Integer.toString(green & 0xFf)+" "+Integer.toString(blue & 0xff);
 
     }
 }
