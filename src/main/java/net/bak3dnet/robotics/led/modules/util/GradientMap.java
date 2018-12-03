@@ -70,7 +70,7 @@ public class GradientMap {
       double delta = numerator / lengthBtwnColors;
 
       float position = (float) ((double)delta*transitive);
-      
+
       int finalOut = (int) Math.round(position);
 
       return finalOut + previousColor;
@@ -79,7 +79,7 @@ public class GradientMap {
 
     public Color getCurrentColor(double positionInMilliseconds) {
 
-      int pointInGradient =(int) (positionInMilliseconds % duration());
+      int pointInGradient = (int) (positionInMilliseconds % duration());
 
       int pIGBackup = pointInGradient;
 

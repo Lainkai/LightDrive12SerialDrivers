@@ -3,6 +3,7 @@ package net.bak3dnet.robotics.led;
 import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.SerialPort;
+//import net.bak3dnet.SerialPort;
 import net.bak3dnet.robotics.led.modules.LedControlModule;
 
 public class LightDrive12 {
@@ -100,7 +101,7 @@ public class LightDrive12 {
 
                 try{
 
-                    Thread.sleep(1);
+                    Thread.sleep(15);
 
                 } catch(InterruptedException e) {
 
