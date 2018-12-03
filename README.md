@@ -18,4 +18,4 @@ There are 5 places you can use as a serial port:
 These drivers are also not meant for individually adressable led strips. **The entire strip will be the same color.**
 
 ## What is a channel?
-On the LED controller, there are four areas that you can plug in the led strips. Those are called channels. If the power source is on top, the farthest left power out is channel 1, while 4 is on the right.
+On the LED controller, there are four areas that you can plug in the led strips. Those are called channels. If the power source/ CAN bus is on top, the farthest left power out is channel 1, while 4 is on the right.
