@@ -1,241 +1,147 @@
 package net.bak3dnet.robotics.led;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.SerialPort.Port;
-import net.bak3dnet.robotics.led.dynamic.DynamicControlBase;
+import net.bak3dnet.robotics.led.modules.LedControlModule;
 
 public class LightDrive12 {
 
-    SerialPort port;
+    private ControllerUpdatingService updatingService;
+    private Thread serviceThread;
 
-    private List<Byte> channel1, channel2, channel3, channel4;
-    private byte[] array;
+    private Channel channel1 = new Channel();
+    private Channel channel2 = new Channel();
+    private Channel channel3 = new Channel();
+    private Channel channel4 = new Channel();
 
-    private DynamicLightingManager dLightingManager;
-    private DynamicControlBase activeModuleChannel1;
-    private DynamicControlBase activeModuleChannel2;
-    private DynamicControlBase activeModuleChannel3;
-    private DynamicControlBase activeModuleChannel4;
+    private Channel[] channels;
 
-    private Thread dynamicLightingThread;
+    private SerialPort port;
 
-    private static class DynamicLightingManager implements Runnable {
+    public LightDrive12(SerialPort.Port portToUse) {
 
-        LightDrive12 lightDrive;
+        port = new SerialPort(115200, portToUse);
 
-        public DynamicLightingManager(LightDrive12 lightDrive) {
-            this.lightDrive = lightDrive;
+        channels = new Channel[4];
+        channels[0] = channel1;
+        channels[1] = channel2;
+        channels[2] = channel3;
+        channels[3] = channel4;
+
+        updatingService = new ControllerUpdatingService(this);
+        serviceThread = new Thread(updatingService, "LED Updating Service");
+        serviceThread.start();
+
+    }
+
+    private byte calculateChecksum(byte[] toCalculate) {
+
+        byte sum = 0;
+
+        for(byte b: toCalculate) {
+
+            sum +=b;
+
         }
 
+        return sum;
+
+    }
+
+    private void writeToSerialBus() {
+
+        byte[] dataOut = new byte[14];
+        dataOut[0] = (byte) 0xAA;
+        for(int i = 1; i < 5; i++) {
+
+            dataOut[3*i-2] = channels[i-1].getColorValue('g');
+            dataOut[3*i-1] = channels[i-1].getColorValue('r');
+            dataOut[3*i] = channels[i-1].getColorValue('b');
+
+        }
+        
+        dataOut[13] = calculateChecksum(dataOut);
+
+        port.write(dataOut, 14);
+
+    }
+
+    private class ControllerUpdatingService implements Runnable {
+
+        LightDrive12 lightDrive;
+        Channel[] channels;
+        long[] previousTimes = new long[4];
+
+        public ControllerUpdatingService(LightDrive12 lDrive12) {
+
+            lightDrive = lDrive12;
+            channels = lightDrive.getChannels();
+
+            Arrays.fill(previousTimes, System.currentTimeMillis());
+
+        }
+
+        @Override
         public void run() {
-            long previousTime = System.currentTimeMillis();
-            while(true){
 
-                long currentTime = System.currentTimeMillis();
-                short deltaTime = (short)(currentTime - previousTime);
-                lightDrive.getActiveModule(1).task(lightDrive,deltaTime);
-                currentTime = System.currentTimeMillis();
-                deltaTime = (short)(currentTime - previousTime);
-                lightDrive.getActiveModule(1).task(lightDrive,deltaTime);
-                currentTime = System.currentTimeMillis();
-                deltaTime = (short)(currentTime - previousTime);
-                lightDrive.getActiveModule(1).task(lightDrive,deltaTime);
-                currentTime = System.currentTimeMillis();
-                deltaTime = (short)(currentTime - previousTime);
-                lightDrive.getActiveModule(1).task(lightDrive,deltaTime);
+            while(true) {
+                
+                for(int i = 0; i<4;i++) {
 
-                previousTime = currentTime;
+                    long currentTimeMillis = System.currentTimeMillis();
+                    long deltaTime = currentTimeMillis - previousTimes[i];
+                    channels[i].updateColorValues(deltaTime);
+                    previousTimes[i] = currentTimeMillis;
 
-                try {
+                }
+
+                lightDrive.writeToSerialBus();
+
+                try{
+
                     Thread.sleep(1);
-                    //logger.debug("Loop Completed");
-				} catch (InterruptedException e) {
+
+                } catch(InterruptedException e) {
+
                     break;
+
                 }
 
             }
 
         }
-    }
-
-    public LightDrive12(Port portToUse) {
-
-       port = new SerialPort(115200, portToUse);
-
-       channel1.add(new Byte((byte)0));
-       channel1.add(new Byte((byte)0));
-       channel1.add(new Byte((byte)0));
-
-       channel2 = channel3 = channel4 = channel1;
-
-       array = new byte[14];
-
-       dLightingManager = new DynamicLightingManager(this);
 
     }
 
-    private Byte calcChecksum(List<Byte> bytesToCalculate) {
+    public void setChannelModule(int channelId, LedControlModule module) {
 
-        byte checkSum = 0;
-        for(byte i =0; i <13;i++) {
-
-            checkSum += bytesToCalculate.get(i);
-
-        }
-        
-        return new Byte(checkSum);
-
-    }
-
-    public void setChannelData(int channelId, List<Byte> data) {
-
-        if(data.size() != 3) {
-            throw new IllegalArgumentException("You must have an list with a size of three.");
-        }
-        if(channelId < 0 || channelId > 4) {
-            throw new IllegalArgumentException("There are only 4 channels on the controller.");
-        }
+        serviceThread.interrupt();
 
         switch(channelId) {
-            case 1:
-                channel1 = data;
+
+            case 1: channel1.setChannelModule(module);
                 break;
-            case 2:
-                channel2 = data;
+            case 2: channel2.setChannelModule(module);
                 break;
-            case 3:
-                channel3 = data;
+            case 3: channel3.setChannelModule(module);
                 break;
-            case 4:
-                channel4 = data;
+            case 4: channel4.setChannelModule(module);
                 break;
-        }
-
-    }
-
-    public void setChannelData(int channelId, String hexString) {
-
-        List<Byte> data = new ArrayList<Byte>();
-
-        data.add(Integer.decode(hexString.substring(2, 3)).byteValue());
-        data.add(Integer.decode(hexString.substring(0, 1)).byteValue());
-        data.add(Integer.decode(hexString.substring(4, 5)).byteValue());
-
-        setChannelData(channelId, data);
-
-    }
-
-    public void setAllChannels(List<Byte> data) {
-
-        for(byte i = 1; i <= 4; i++) {
-            setChannelData(i, data);
-        }
-
-    }
-
-    public void setPluralChannels(int[] channels, List<List<Byte>> data) {
-        int iterations =0;
-        for(int i: channels) {
-
-            setChannelData(i, data.get(iterations));
-            iterations++;
-
-        }
-        writeToDevice();
-    }
-
-    public void setPluralChannels(int[] channels, String[] hexStrings) {
-
-        List<Byte> preList = new ArrayList<Byte>();
-        List<List<Byte>> data = new ArrayList<List<Byte>>(); 
-
-        for(int i = 0; i< channels.length;i++){
-            preList.add(Integer.decode(hexStrings[i].substring(0, 1)).byteValue());
-            preList.add(Integer.decode(hexStrings[i].substring(2, 3)).byteValue());
-            preList.add(Integer.decode(hexStrings[i].substring(4, 5)).byteValue());
-
-            data.add(preList);
-        }
-
-        setPluralChannels(channels, data);
-
-    }
-
-    public DynamicControlBase getActiveModule(int channel) {
-
-        switch(channel) {
-
-            case 1:
-                return activeModuleChannel1;
-            case 2:
-                return activeModuleChannel2;
-            case 3:
-                return activeModuleChannel3;
-            case 4:
-                return activeModuleChannel4;
-            default:
-                throw new IllegalArgumentException("There are only four natural number channels");
+            default: throw new IllegalArgumentException("There are only four channels on the device. Count naturally.");
 
         }
 
-    }
-
-    public int writeToDevice() {
-
-        List<Byte> buffer = new ArrayList<Byte>();
-        buffer.add(new Byte((byte)0xaa));
-        buffer.addAll(channel1);
-        buffer.addAll(channel2);
-        buffer.addAll(channel3);
-        buffer.addAll(channel4);
-        buffer.add(calcChecksum(buffer));        
-
-        for(byte j = 0; j < buffer.size(); j++) {
-
-            array[j] = buffer.get(j);
-
-        }
-        
-        return port.write(array, 14);
+        serviceThread = new Thread(updatingService, "LED Updating Service");
+        serviceThread.start();   
 
     }
 
-    public void setActiveModule(int channel, DynamicControlBase module) {
+    public Channel[] getChannels() {
 
-        if(dynamicLightingThread != null) {
-            
-            //logger.debug("Interrupting taskCoordinator");
-            dynamicLightingThread.interrupt();
-        
-        }
-        
-        //logger.debug("Setting active module");
-        switch(channel) {
-
-            case 1:
-                activeModuleChannel1 = module;
-                break;
-            case 2:
-                activeModuleChannel2 = module;
-                break;
-            case 3:
-                activeModuleChannel3 = module;
-                break;
-            case 4:
-                activeModuleChannel4 = module;
-                break;
-
-            default:
-                throw new IllegalArgumentException("There are only four natural number channels");
-
-        }
-        //logger.debug("Creating new thread");
-        dynamicLightingThread = new Thread(dLightingManager);
-        //logger.info("Starting new thread");
-        this.dynamicLightingThread.start();
+        return channels;
 
     }
+
+
 }
