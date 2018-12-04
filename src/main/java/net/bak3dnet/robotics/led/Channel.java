@@ -18,6 +18,13 @@ public class Channel {
 
     }
 
+    /**
+     * Gets the brightnes of the color ids.
+     * 
+     * @param colorId The color id, 'r', 'g', 'b'
+     * 
+     * @return sRGB byte array
+     */
     public byte getColorValue(char colorId) {
 
         switch(colorId) {
@@ -34,6 +41,11 @@ public class Channel {
 
     }
 
+    /**
+     * Gets the latest color.
+     * 
+     * @param deltaTime The length of time since last run.
+     */
     public void updateColorValues(long deltaTime) {
 
         byte[] data = activeModule.updateColorData(deltaTime);
@@ -44,13 +56,21 @@ public class Channel {
 
     }
 
+    /**
+     * Sets the channel's module
+     * @param module The module to set the channel to
+     */
     public void setChannelModule(LedControlModule module) {
 
         activeModule = module;
 
     }
 
-    public LedControlModule getChannelMOdule() {
+    /**
+     * Gets the active module.
+     * @return The active module.
+     */
+    public LedControlModule getChannelModule() {
 
         return activeModule;
 
