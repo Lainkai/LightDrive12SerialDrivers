@@ -3,6 +3,7 @@ package net.bak3dnet.robotics.led;
 import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.SerialPort;
+//import net.bak3dnet.SerialPort;
 import net.bak3dnet.robotics.led.modules.LedControlModule;
 
 public class LightDrive12 {
@@ -19,6 +20,10 @@ public class LightDrive12 {
 
     private SerialPort port;
 
+    /**
+     * The constructor for the LightDrive
+     * @param portToUse The serial port that is being used by the lightdrive.
+     */
     public LightDrive12(SerialPort.Port portToUse) {
 
         port = new SerialPort(115200, portToUse);
@@ -100,7 +105,7 @@ public class LightDrive12 {
 
                 try{
 
-                    Thread.sleep(1);
+                    Thread.sleep(15);
 
                 } catch(InterruptedException e) {
 
@@ -114,6 +119,12 @@ public class LightDrive12 {
 
     }
 
+    /**
+     * Sets the module to set the colors.
+     * 
+     * @param channelId The channel to set the module.
+     * @param module The module to set the channel to.
+     */
     public void setChannelModule(int channelId, LedControlModule module) {
 
         serviceThread.interrupt();
@@ -137,6 +148,10 @@ public class LightDrive12 {
 
     }
 
+    /**
+     * Gets the channels
+     * @return An array of the channels
+     */
     public Channel[] getChannels() {
 
         return channels;

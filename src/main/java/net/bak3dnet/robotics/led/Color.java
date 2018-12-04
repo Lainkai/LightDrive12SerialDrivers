@@ -15,6 +15,12 @@ public class Color {
     public static final Color WHITE = new Color("FFF");
     
 
+    /**
+     *Converts a hex string to an rgb byte array.
+     *
+     * @param toRGB The string to convert to RGB. Some examples would be 'f00', '#f7a366', or 'f85490'
+     * @return The byte array of an sRGB color space.
+     */
     public static byte[] stringToByteArray(String toRGB) {
 
         byte[] colorArray = new byte[3];
@@ -43,6 +49,11 @@ public class Color {
         
     }
 
+    /**
+     * Makes a color from a byte array.
+     * 
+     * @param byteArray The RGB byte array. The order for indexes is [0] is red brightness, [1] is green, and [2] is blue.
+     */
     public Color(byte[] byteArray) {
 
         red = byteArray[0];
@@ -51,6 +62,15 @@ public class Color {
 
     }
 
+    /**
+     * Creates a color out of red green or blue
+     * 
+     * @param red The red brightness
+     * 
+     * @param green The green brightness
+     * 
+     * @param blue The blue brightness
+     */
     public Color(int red, int green, int blue) {
 
         if(red > 255 || green > 255 || blue > 255 || red < 0|| green < 0 || blue < 0) {
@@ -65,12 +85,20 @@ public class Color {
 
     }
     
+    /**
+     * Makes a color from a hex string.
+     * @param hexString The string to decode
+     */
     public Color(String hexString) {
 
         this(stringToByteArray(hexString));
 
     }
 
+    /**
+     * Gets the bytes for the color.
+     * @return The bytes of the color.
+     */
     public byte[] getBytes() {
 
         byte[] out = {red,green,blue};
@@ -78,12 +106,24 @@ public class Color {
 
     }
 
+    /**
+     * Gets the red.
+     * @return The red.
+     */
     public int getRed(){
         return red & 0xff;
     }
+    /**
+     * Gets the green.
+     * @return The green.
+     */
     public int getGreen(){
         return green & 0xff;
     }
+    /**
+     * Gets the blue.
+     * @return The blue.
+     */
     public int getBlue(){
         return blue & 0xff;
     }
