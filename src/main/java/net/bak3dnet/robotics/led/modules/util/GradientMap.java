@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.bak3dnet.robotics.led.Color;
-
+/**
+ * A map for storing positions of colors for a gradient.
+ */
 public class GradientMap {
 
     private Map<Integer, Color> colors = new HashMap<Integer, Color>();
@@ -21,6 +23,11 @@ public class GradientMap {
 
     public GradientMap() {}
 
+    /**
+     * Appends the color to the gradient.
+     * @param color The color to be appended.
+     * @param lengthAfterLastColor How many milliseconds after the previous color.
+     */
     public void put(Color color, Long lengthAfterLastColor) {
 
         colors.put(colors.size(), color);
@@ -30,6 +37,12 @@ public class GradientMap {
 
     }
 
+    /**
+     * Puts a color at the index, replacing the color at the current index.
+     * @param color The color to put.
+     * @param lengthAfterLastColor The milliseconds after the previous color.
+     * @param index The index to put the color.
+     */
     public void put(Color color, Long lengthAfterLastColor, Integer index) {
 
         if(index > colors.size()) {
@@ -44,6 +57,15 @@ public class GradientMap {
 
     }
 
+    /**
+     * Puts a color at the index, and shifts the next colors back.
+     * 
+     * @param color The color to insert.
+     * 
+     * @param lengthAfterLastColor The time in milliseconds to wait after the previous color
+     * 
+     * @param index The index to insert the color.
+     */
     public void insert(Color color, Long lengthAfterLastColor, Integer index) {
 
         Color prevColor;
@@ -77,6 +99,11 @@ public class GradientMap {
 
     }
 
+    /**
+     * Gets the color from the position in milliseconds.
+     * @param positionInMilliseconds The time in milliseconds the module has been active.
+     * @return A new color with the gradient applied.
+     */
     public Color getCurrentColor(double positionInMilliseconds) {
 
       int pointInGradient = (int) (positionInMilliseconds % duration());
@@ -112,6 +139,10 @@ public class GradientMap {
 
     }
 
+    /**
+     * Removes the color at the index.
+     * @param index The index to remove.
+     */
     public void remove(int index) {
 
         durationOfMapMillis -= points.get(index);
@@ -129,6 +160,10 @@ public class GradientMap {
         }
 
     }
+    /**
+     * Gets the size of the Gradient.
+     * @return Integer of size of the gradient.
+     */
 
     public int size() {
 
@@ -136,11 +171,21 @@ public class GradientMap {
 
     }
 
+    /**
+     * The duration of the gradient if the scale was set to one (1).
+     * @return The length in milliseconds of the gradient.
+     */
     public long duration() {
 
         return durationOfMapMillis;
 
     }
+    
+    /**
+     * Gets the color at the index.
+     * @param index The index of the color, starting at 0.
+     * @return The color at the index
+     */
 
     public Color getColor(int index) {
 

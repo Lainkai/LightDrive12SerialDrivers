@@ -2,6 +2,9 @@ package net.bak3dnet.robotics.led.modules;
 
 import net.bak3dnet.robotics.led.Color;
 
+/**
+ * Sets the channel this is assigned to a static color.
+ */
 public class AStaticColorModule extends LedControlModule{
 
     public AStaticColorModule(byte[] rgbArray) {
