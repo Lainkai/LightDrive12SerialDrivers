@@ -16,7 +16,7 @@ plugins {
     id 'maven-publish'
 }
 
-version = '1.0.0'
+version = '1.1.0'
 group = 'robotics'
 
 dependencies {
@@ -62,9 +62,9 @@ bintray {
 
         version {
 
-            name = '1.0.0-Final'
+            name = '1.1.0-Final'
             desc = 'First official release for the Light Drive 12 drivers'
-            vcsTag = '1.0.0'
+            vcsTag = '1.1.0'
 
         }
 
